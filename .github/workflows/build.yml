@@ -1,0 +1,36 @@
+name: cln_plugin common sanity check
+
+on:
+  push:
+    branches:
+      - template/class
+      - template/function
+  pull_request:
+    branches:
+      - template/class
+      - template/function
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        sdk: [stable, beta, dev]
+        flavor: [release]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: ${{ matrix.sdk }}
+
+      - name: Formatting sdk ${{ matrix.sdk }} and os ${{ matrix.os }}
+        run: |
+          dart pub get
+          dart format --set-exit-if-changed .
+
+      - name: Analysis sdk ${{ matrix.sdk }} and os ${{ matrix.os }}
+        run: |
+          dart analyze
+          dart analyze test

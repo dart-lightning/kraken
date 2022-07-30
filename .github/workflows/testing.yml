@@ -1,0 +1,29 @@
+name: Integration testing
+
+on:
+  push:
+    branches:
+      - template/class
+      - template/function
+  pull_request:
+    branches:
+      - template/class
+      - template/function
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Integration testing
+        run: |
+          cd docker
+          docker-compose up --exit-code-from cln
+      - name: Upload lightning log
+        uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          path: |
+            docker/sandbox/node_one.log
+            docker/sandbox/node_two.log
+          name: ${{ github.run_number }}
