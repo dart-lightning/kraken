@@ -3,7 +3,7 @@
   "version": "v0.0.1",
   "api": {
     "name": "github",
-    "repository": "dart-lightning/lndart.kraken",
+    "repository": "dart-lightning/kraken",
     "branch": "main"
   },
   "generation_method": {
