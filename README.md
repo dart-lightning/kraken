@@ -4,7 +4,7 @@
   <img src="https://github.com/dart-lightning/icons/raw/main/main/res/mipmap-xxxhdpi/ic_launcher.png" />
 
   <p>
-    <strong> :dart: Plugin to analyze Core Lightning payments :dart: </strong>
+    <strong> :dart: A Core Lightning invoice payment plugin :dart: </strong>
   </p>
 
   <h4>
