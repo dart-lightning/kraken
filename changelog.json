@@ -1,9 +1,9 @@
 {
-  "package_name": "cln_plugin",
+  "package_name": "kraken",
   "version": "v0.0.1",
   "api": {
     "name": "github",
-    "repository": "dart-lightning/lndart.cln_plugin",
+    "repository": "dart-lightning/lndart.kraken",
     "branch": "main"
   },
   "generation_method": {

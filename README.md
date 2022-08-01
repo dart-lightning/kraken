@@ -1,10 +1,10 @@
 <div align="center">
-  <h1>lndart.cln_plugin</h1>
+  <h1>lndart.kraken</h1>
 
   <img src="https://github.com/dart-lightning/icons/raw/main/main/res/mipmap-xxxhdpi/ic_launcher.png" />
 
   <p>
-    <strong> :dart: Dart framework for Core Lightning :dart: </strong>
+    <strong> :dart: Plugin to analyze Core Lightning payments :dart: </strong>
   </p>
 
   <h4>
@@ -12,18 +12,17 @@
   </h4>
 </div>
 
-A minimal template for projects based on [lndart.cln](https://github.com/dart-lightning/lndart.cln). This should
-get you started if you want to develop a core lightning plugin using Dart.
+Kraken is a plugin for Core Lightning that helps you analyze invoice payments.
 
 ## How to use
 
-Dart can compile a package to a binary in target platform using the `dart compile`
+Kraken can be compiled into an executable using the  `dart compile` command.
 
 ```bash
 dart compile exe bin/cln_plugin.dart
 ```
 
-This will generate an executable in the `bin/` subdirectory. This executable can be used with core lightning using the
+This executable can be found in the `bin/` subdirectory. This executable can be used with core lightning using the
 
 ```
 --plugin = path_to_this_executable
