@@ -1,5 +1,5 @@
-name: cln_plugin
-description: Template to write a plugin for core lightning in dart lang.
+name: kraken
+description: Plugin for Core Lightning that helps analyze invoice payments.
 version: 1.0.0
 homepage: https://github.com/dart-lightning/kraken
 
@@ -7,6 +7,8 @@ environment:
   sdk: '>=2.17.6 <3.0.0'
 
 dependencies:
+  clightning_rpc: ^0.0.2-beta.2
+  cln_common: ^0.0.1-beta.1
   cln_plugin_api: ^0.0.1-beta.1
 
 dev_dependencies:
