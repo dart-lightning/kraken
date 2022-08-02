@@ -1,4 +1,4 @@
-import 'package:cln_plugin/kraken.dart';
+import 'package:kraken/kraken.dart';
 
 void main() {
   /// To create a plugin in dart we need to extend the Plugin
