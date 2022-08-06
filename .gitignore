@@ -18,3 +18,5 @@ build/
 *.log
 *.info
 *.exe
+
+kraken

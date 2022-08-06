@@ -2,7 +2,7 @@ CC=dart
 FMT=format
 ARGS="--help"
 PROBLEM=
-NAME=cln_plugin
+NAME=kraken
 
 default: fmt build
 
