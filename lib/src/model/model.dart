@@ -54,3 +54,23 @@ class PayRequest extends Serializable {
   @override
   Map<String, dynamic> toJSON() => {};
 }
+
+class FetchInvoiceRequest extends Serializable {
+  String offer;
+  String? msamsatoshi;
+
+  FetchInvoiceRequest({required this.offer, this.msamsatoshi});
+
+  @override
+  Map<String, dynamic> toJSON() {
+    return {
+      "offer": offer,
+    };
+  }
+}
+
+class FetchInvoiceResponse {
+  String invoice;
+
+  FetchInvoiceResponse(this.invoice);
+}

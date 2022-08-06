@@ -25,8 +25,12 @@ class KrakenPlugin extends Plugin {
           .call(method: "listfunds", params: params.toListFundsRequest());
 
       /// Make a call to listfunds like the prev one, and take only the channels
-      return Future.value(
-          {"listpays": listPays, "channels": listFunds["channels"]});
+      /// The raw reason is the error message that core lightning return
+      return Future.value({
+        "listpays": listPays,
+        "channels": listFunds["channels"],
+        "raw_reason": request["raw_reason"] ?? "unknown"
+      });
     } catch (ex, stacktrace) {
       plugin.log(level: "broken", message: "error received: ${ex.toString()}");
       stderr.write(stacktrace);
@@ -34,13 +38,34 @@ class KrakenPlugin extends Plugin {
     }
   }
 
+  Future<String> handleBolt12(Plugin plugin,
+      {required FetchInvoiceRequest offer}) async {
+    var fetchInvoice = await rpc!
+        .call<FetchInvoiceRequest, FetchInvoiceResponse>(
+            method: "fetchinvoice", params: offer);
+    return fetchInvoice.invoice;
+  }
+
   /// This is the Kraken pay RPC method. This method allows for
   /// an alternate method to pay invoices in Core Lightning and
   /// return payment failure analysis reports.
+  ///
+  /// For more info on what command we are wrapping, check the cln pay command
+  // https://lightning.readthedocs.io/lightning-pay.7.html
   Future<Map<String, Object>> krakenPay(
       Plugin plugin, Map<String, Object> request) async {
     log(level: "info", message: "This is the kraken pay output.");
     try {
+      String invoice = request["bolt11"]! as String;
+      // The human-readable prefix for BOLT 12 offers is lno.
+      if (invoice.startsWith("lno")) {
+        // Modify request with the correct bolt 12!
+        // FIXME: we should remove the msatoshi amount from the request? or the pay command
+        // us smart enough to handle it?
+        request["bolt11"] = await handleBolt12(plugin,
+            offer: FetchInvoiceRequest(
+                offer: invoice, msamsatoshi: request["msatoshi"] as String?));
+      }
       // TODO: rpc should return an exception if any error occurs, and if we have the error returned run the doctor command
       HashMap<String, Object> result =
           await rpc!.call(method: "pay", params: PayRequest.fromJson(request));
@@ -48,6 +73,8 @@ class KrakenPlugin extends Plugin {
     } catch (ex, stacktrace) {
       plugin.log(level: "broken", message: "error received: ${ex.toString()}");
       stderr.write(stacktrace);
+      // TODO run the doctor command, and put the CLN exception message inside the doctor request
+      // with identifier `raw_reason`
       rethrow;
     }
   }
