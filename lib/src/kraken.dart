@@ -19,7 +19,7 @@ class KrakenPlugin extends Plugin {
     try {
       // TODO make sure that this will trow an exception
       Map<String, dynamic> listPays = await rpc!
-          .call(method: "listpays", params: params.toListPaysRequest());
+          .call(method: "paystatus", params: params.toPaysStatusRequest());
       Map<String, dynamic> listFunds = await rpc!
           .call(method: "listfunds", params: params.toListFundsRequest());
 
@@ -77,14 +77,13 @@ class KrakenPlugin extends Plugin {
               PayResponse.fromJson(jsonDecode(jsonEncode(jsonPayload))));
       return result.toJSON() as Map<String, Object>;
     } on LNClientException catch (ex, stacktrace) {
+      request["raw_reason"] = ex.message;
       plugin.log(level: "broken", message: "error received: ${ex.message}");
       plugin.log(level: "broken", message: stacktrace.toString());
       return krakenDoctor(plugin, request);
     } catch (ex, stacktrace) {
       plugin.log(level: "broken", message: "error received: ${ex.toString()}");
       plugin.log(level: "broken", message: stacktrace.toString());
-      // TODO run the doctor command, and put the CLN exception message inside the doctor request
-      // with identifier `raw_reason`
       rethrow;
     }
   }

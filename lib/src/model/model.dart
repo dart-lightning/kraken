@@ -14,7 +14,7 @@ class DoctorRequest extends Serializable {
     return this as T;
   }
 
-  ListPaysRequest toListPaysRequest() => ListPaysRequest(bolt11);
+  PaysStatusRequest toPaysStatusRequest() => PaysStatusRequest(bolt11);
 
   ListFundsRequest toListFundsRequest() => ListFundsRequest();
 
@@ -27,12 +27,12 @@ class DoctorRequest extends Serializable {
 }
 
 @JsonSerializable()
-class ListPaysRequest extends Serializable {
+class PaysStatusRequest extends Serializable {
   final String bolt11;
 
-  ListPaysRequest(this.bolt11);
+  PaysStatusRequest(this.bolt11);
 
-  factory ListPaysRequest.fromJson(Map<String, dynamic> json) =>
+  factory PaysStatusRequest.fromJson(Map<String, dynamic> json) =>
       _$ListPaysRequestFromJson(json);
 
   @override
