@@ -1,6 +1,5 @@
-import 'dart:collection';
-import 'dart:io';
-
+import 'dart:async';
+import 'dart:convert';
 import 'package:clightning_rpc/clightning_rpc.dart';
 import 'package:cln_common/cln_common.dart';
 import 'package:kraken/src/model/model.dart';
@@ -31,9 +30,9 @@ class KrakenPlugin extends Plugin {
         "channels": listFunds["channels"],
         "raw_reason": request["raw_reason"] ?? "unknown"
       });
-    } catch (ex, stacktrace) {
-      plugin.log(level: "broken", message: "error received: ${ex.toString()}");
-      stderr.write(stacktrace);
+    } on LNClientException catch (ex, stacktrace) {
+      plugin.log(level: "broken", message: "error received: ${ex.message}");
+      plugin.log(level: "broken", message: stacktrace.toString());
       rethrow;
     }
   }
@@ -54,9 +53,11 @@ class KrakenPlugin extends Plugin {
   // https://lightning.readthedocs.io/lightning-pay.7.html
   Future<Map<String, Object>> krakenPay(
       Plugin plugin, Map<String, Object> request) async {
-    log(level: "info", message: "This is the kraken pay output.");
+    log(
+        level: "info",
+        message: "This is the kraken pay cmd with request: $request");
     try {
-      String invoice = request["bolt11"]! as String;
+      String invoice = request["invoice"]! as String;
       // The human-readable prefix for BOLT 12 offers is lno.
       if (invoice.startsWith("lno")) {
         // Modify request with the correct bolt 12!
@@ -65,14 +66,23 @@ class KrakenPlugin extends Plugin {
         request["bolt11"] = await handleBolt12(plugin,
             offer: FetchInvoiceRequest(
                 offer: invoice, msamsatoshi: request["msatoshi"] as String?));
+      } else {
+        request["bolt11"] = invoice;
       }
       // TODO: rpc should return an exception if any error occurs, and if we have the error returned run the doctor command
-      HashMap<String, Object> result =
-          await rpc!.call(method: "pay", params: PayRequest.fromJson(request));
-      return Future.value(result);
+      PayResponse result = await rpc!.call<PayRequest, PayResponse>(
+          method: "pay",
+          params: PayRequest.fromJson(request),
+          onDecode: (jsonPayload) =>
+              PayResponse.fromJson(jsonDecode(jsonEncode(jsonPayload))));
+      return result.toJSON() as Map<String, Object>;
+    } on LNClientException catch (ex, stacktrace) {
+      plugin.log(level: "broken", message: "error received: ${ex.message}");
+      plugin.log(level: "broken", message: stacktrace.toString());
+      return krakenDoctor(plugin, request);
     } catch (ex, stacktrace) {
       plugin.log(level: "broken", message: "error received: ${ex.toString()}");
-      stderr.write(stacktrace);
+      plugin.log(level: "broken", message: stacktrace.toString());
       // TODO run the doctor command, and put the CLN exception message inside the doctor request
       // with identifier `raw_reason`
       rethrow;
@@ -89,7 +99,7 @@ class KrakenPlugin extends Plugin {
         callback: krakenDoctor);
     registerRPCMethod(
         name: "kraken_pay",
-        usage: "",
+        usage: "[bolt11]",
         description:
             "Wrap all the complexity to pay an invoice under one single command, and produce a failure report if the command fails.",
         callback: krakenPay);
