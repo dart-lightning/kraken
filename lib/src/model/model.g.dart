@@ -16,12 +16,12 @@ Map<String, dynamic> _$DoctorRequestToJson(DoctorRequest instance) =>
       'bolt11': instance.bolt11,
     };
 
-ListPaysRequest _$ListPaysRequestFromJson(Map<String, dynamic> json) =>
-    ListPaysRequest(
+PaysStatusRequest _$ListPaysRequestFromJson(Map<String, dynamic> json) =>
+    PaysStatusRequest(
       json['bolt11'] as String,
     );
 
-Map<String, dynamic> _$ListPaysRequestToJson(ListPaysRequest instance) =>
+Map<String, dynamic> _$ListPaysRequestToJson(PaysStatusRequest instance) =>
     <String, dynamic>{
       'bolt11': instance.bolt11,
     };
