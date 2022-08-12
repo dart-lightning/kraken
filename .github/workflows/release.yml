@@ -1,4 +1,4 @@
-name: kraken common sanity check
+name: kraken release binary
 
 on:
   push:

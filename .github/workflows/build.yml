@@ -27,7 +27,8 @@ jobs:
 
       - name: Formatting sdk ${{ matrix.sdk }} and os ${{ matrix.os }}
         run: |
-          dart pub get
+          make dep
+          make gen
           dart format --set-exit-if-changed .
 
       - name: Analysis sdk ${{ matrix.sdk }} and os ${{ matrix.os }}
