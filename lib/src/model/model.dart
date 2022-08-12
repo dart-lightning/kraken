@@ -18,7 +18,6 @@ class DoctorRequest extends Serializable {
 
   ListFundsRequest toListFundsRequest() => ListFundsRequest();
 
-  // TODO implement autogenerator
   factory DoctorRequest.fromJson(Map<String, dynamic> json) =>
       _$DoctorRequestFromJson(json);
 
@@ -33,10 +32,10 @@ class PaysStatusRequest extends Serializable {
   PaysStatusRequest(this.bolt11);
 
   factory PaysStatusRequest.fromJson(Map<String, dynamic> json) =>
-      _$ListPaysRequestFromJson(json);
+      _$PaysStatusRequestFromJson(json);
 
   @override
-  Map<String, dynamic> toJSON() => _$ListPaysRequestToJson(this);
+  Map<String, dynamic> toJSON() => _$PaysStatusRequestToJson(this);
 }
 
 @JsonSerializable()
