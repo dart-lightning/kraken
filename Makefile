@@ -3,6 +3,7 @@ FMT=format
 ARGS="--help"
 PROBLEM=
 NAME=kraken
+OS=linux
 
 default: fmt build
 
@@ -14,7 +15,7 @@ fmt:
 	$(CC) analyze .
 
 gen:
-	$(CC) run build_runner build
+	$(CC) run build_runner build --delete-conflicting-outputs
 
 clean:
 	rm lib/src/**/*.g.dart
@@ -24,3 +25,6 @@ check:
 
 build:
 	$(CC) compile exe bin/cln_plugin.dart -o $(NAME)
+
+release:
+	$(CC) compile exe bin/cln_plugin.dart -o $(NAME)-$(OS)
