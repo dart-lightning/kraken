@@ -17,20 +17,22 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        sdk: [stable, beta, dev]
+        target: [linux, osx, windows]
         flavor: [release]
     steps:
       - uses: actions/checkout@v2
       - uses: dart-lang/setup-dart@v1
         with:
-          sdk: ${{ matrix.sdk }}
+          sdk: stable
 
-      - name: Formatting sdk ${{ matrix.sdk }} and os ${{ matrix.os }}
+      - name: Build for release
         run: |
-          dart pub get
-          dart format --set-exit-if-changed .
+          make dep
+          make gen
+          make OS=${{matrix.target}} release
 
-      - name: Analysis sdk ${{ matrix.sdk }} and os ${{ matrix.os }}
-        run: |
-          dart analyze
-          dart analyze test
+      - name: Upload ${{matrix.target}} Binary
+        uses: actions/upload-artifact@v2
+        with:
+            name: cln.app-${{matrix.target}}
+            path: kraken-${{matrix.target}}
