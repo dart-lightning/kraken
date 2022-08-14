@@ -63,15 +63,25 @@ Map<String, dynamic> _$PayResponseToJson(PayResponse instance) =>
 FetchInvoiceRequest _$FetchInvoiceRequestFromJson(Map<String, dynamic> json) =>
     FetchInvoiceRequest(
       offer: json['offer'] as String,
-      msamsatoshi: json['msamsatoshi'] as String?,
+      msatoshi: json['msatoshi'] as String?,
+      amountMsat: json['amount_msat'] as int?,
     );
 
-Map<String, dynamic> _$FetchInvoiceRequestToJson(
-        FetchInvoiceRequest instance) =>
-    <String, dynamic>{
-      'offer': instance.offer,
-      'msamsatoshi': instance.msamsatoshi,
-    };
+Map<String, dynamic> _$FetchInvoiceRequestToJson(FetchInvoiceRequest instance) {
+  final val = <String, dynamic>{
+    'offer': instance.offer,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('msatoshi', instance.msatoshi);
+  writeNotNull('amount_msat', instance.amountMsat);
+  return val;
+}
 
 FetchInvoiceResponse _$FetchInvoiceResponseFromJson(
         Map<String, dynamic> json) =>
