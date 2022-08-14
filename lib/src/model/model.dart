@@ -84,12 +84,14 @@ class PayResponse extends Serializable {
   Map<String, dynamic> toJSON() => _$PayResponseToJson(this);
 }
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class FetchInvoiceRequest extends Serializable {
   String offer;
-  String? msamsatoshi;
+  String? msatoshi;
+  @JsonKey(name: "amount_msat")
+  int? amountMsat;
 
-  FetchInvoiceRequest({required this.offer, this.msamsatoshi});
+  FetchInvoiceRequest({required this.offer, this.msatoshi, this.amountMsat});
 
   factory FetchInvoiceRequest.fromJson(Map<String, dynamic> json) =>
       _$FetchInvoiceRequestFromJson(json);

@@ -8,7 +8,7 @@ environment:
 
 dependencies:
   clightning_rpc: ^0.0.2-beta.4
-  cln_common: ^0.0.1-beta.1
+  cln_common: ^0.0.1-beta.2
   cln_plugin_api: ^0.0.1-beta.2
   json_annotation: ^4.5.0
 
